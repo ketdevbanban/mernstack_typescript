@@ -1,5 +1,6 @@
 import express,{Request,Response} from "express";
 import cors from "cors";
+import { routes } from "./routes";
 
 const app = express();
 
@@ -8,7 +9,5 @@ app.use(cors({
     origin:["http://localhost:3000"]
 }))
 
-app.get("/",(req:Request, res:Response) => {
-    res.send("ket dev ban ban")
-})
+routes(app);
 app.listen(8000,() => {console.log("listen to port 8000")})
