@@ -8,7 +8,13 @@ import {
   UpdatePassword,
 } from "./controllers/auth.controller";
 import { AuthMiddleware } from "./middleware/auth.middleware";
-import { Users,CreateUser } from "./controllers/user.controller";
+import {
+  Users,
+  CreateUser,
+  GetUser,
+  UpdateUser,
+  DeleteUser,
+} from "./controllers/user.controller";
 
 export const routes = (router: Router) => {
   router.post("/api/register", Register);
@@ -19,4 +25,7 @@ export const routes = (router: Router) => {
   router.put("/api/users/password", AuthMiddleware, UpdatePassword);
   router.get("/api/users", AuthMiddleware, Users);
   router.post("/api/users", AuthMiddleware, CreateUser);
+  router.get("/api/users/:id", AuthMiddleware, GetUser);
+  router.put("/api/users/:id", AuthMiddleware, UpdateUser);
+  router.delete("/api/users/:id", AuthMiddleware, DeleteUser);
 };

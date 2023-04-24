@@ -5,13 +5,15 @@ import { User } from "../entity/user.entity";
 
 export const Users = async (req: Request, res: Response) => {
   const repository = getManager().getRepository(User);
-  const users = await repository.find();
-  res.send(
-    users.map((user) => {
-      const { password, ...data } = user;
-      return data;
-    })
-  );
+  const users = await repository.find({
+    select: {
+      first_name: true,
+      last_name: true,
+      email: true,
+    },
+    relations: { role: true },
+  });
+  res.send(users);
 };
 
 export const CreateUser = async (req: Request, res: Response) => {
@@ -21,6 +23,46 @@ export const CreateUser = async (req: Request, res: Response) => {
   const { password, ...user } = await repository.save({
     ...body,
     password: hasdedpassword,
+    role: {
+      id: role_id,
+    },
+  });
+  res.status(201).send(user);
+};
+
+export const GetUser = async (req: Request, res: Response) => {
+  const repository = getManager().getRepository(User);
+  const { password, ...user } = await repository.findOne({
+    where: { id: parseInt(req.params.id) },
   });
   res.send(user);
+};
+
+export const UpdateUser = async (req: Request, res: Response) => {
+  const { role_id, ...body } = req.body;
+
+  const repository = getManager().getRepository(User);
+
+  await repository.update(req.params.id, {
+    ...body,
+    role: {
+      id: role_id,
+    },
+  });
+
+  const { password, ...user } = await repository.findOne({
+    where: {
+      id: parseInt(req.params.id),
+    },
+    relations: ["role"],
+  });
+
+  res.status(202).send(user);
+};
+export const DeleteUser = async (req: Request, res: Response) => {
+  const repository = getManager().getRepository(User);
+
+  await repository.delete(req.params.id);
+
+  res.status(204).send(null);
 };
