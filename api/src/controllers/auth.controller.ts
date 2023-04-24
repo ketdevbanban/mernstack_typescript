@@ -25,7 +25,7 @@ export const Register = async (req: Request, res: Response) => {
     email,
     password: hashed_password,
   });
-  res.send(user);
+  res.status(200).send("ລົງທະບຽນສຳເລັດ");
 };
 // Login Function
 export const Login = async (req: Request, res: Response) => {
@@ -46,21 +46,18 @@ export const Login = async (req: Request, res: Response) => {
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 1day
   });
-  res.send({
-    message: "Success",
-  });
+  res.status(200).send("ເຂົ້າສູ່ລະບົບສຳເລັດ");
 };
 // Authentication Function
 export const AuthenticatedUser = async (req: Request, res: Response) => {
   const { password, ...user } = req["user"];
   res.send(user);
 };
+//Logout Function
 export const Logout = async (req: Request, res: Response) => {
   res.cookie("jwt", "", { maxAge: 0 });
 
-  res.send({
-    message: "success",
-  });
+  res.status(200).send("ອອກຈາກລະບົບແລ້ວ");
 };
 
 export const UpdateInfo = async (req: Request, res: Response) => {
@@ -74,7 +71,6 @@ export const UpdateInfo = async (req: Request, res: Response) => {
 };
 
 export const UpdatePassword = async (req: Request, res: Response) => {
-
   const user = req["user"];
 
   if (req.body.password !== req.body.password_confirm) {
