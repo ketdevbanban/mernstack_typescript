@@ -1,4 +1,10 @@
-import { CreateRole, GetRole, Roles } from "./controllers/role.controller";
+import {
+  CreateRole,
+  DeleteRole,
+  GetRole,
+  Roles,
+  UpdateRole,
+} from "./controllers/role.controller";
 import { Router } from "express";
 import {
   AuthenticatedUser,
@@ -36,4 +42,6 @@ export const routes = (router: Router) => {
   router.get("/api/roles", AuthMiddleware, Roles);
   router.post("/api/roles", AuthMiddleware, CreateRole);
   router.get("/api/roles/:id", AuthMiddleware, GetRole);
+  router.put("/api/roles/:id", AuthMiddleware, UpdateRole);
+  router.delete("/api/roles/:id", AuthMiddleware, DeleteRole);
 };
