@@ -1,4 +1,5 @@
-import React from "react";
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar } from "antd";
 
 export default function Topbar() {
   return (
@@ -6,8 +7,14 @@ export default function Topbar() {
       <div className="text-center text-white text-3xl font-semibold">
         ket dev ban ban
       </div>
-      <div className="p-2 bg-green-600 rounded-full">
-        <div className="text-center text-white pr-5">ketoudone</div>
+      <div className="flex text-center items-center">
+        <div className="text-center items-center">
+          <Avatar size={40} icon={<UserOutlined />} />
+        </div>
+
+        <div className="text-center text-white pr-5 items-center pl-2">
+          ketoudone
+        </div>
       </div>
     </div>
   );
