@@ -7,9 +7,12 @@ export const Users = async (req: Request, res: Response) => {
   const repository = getManager().getRepository(User);
   const users = await repository.find({
     select: {
+      id: true,
       first_name: true,
       last_name: true,
       email: true,
+      updated_at: true,
+      created_at: true,
     },
     relations: { role: true },
   });
@@ -27,7 +30,10 @@ export const CreateUser = async (req: Request, res: Response) => {
       id: role_id,
     },
   });
-  res.status(201).send(user);
+  res.status(201).send({
+    message: "Create User Success",
+    data: user,
+  });
 };
 
 export const GetUser = async (req: Request, res: Response) => {

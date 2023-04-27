@@ -17,15 +17,18 @@ export const Register = async (req: Request, res: Response) => {
     });
   }
   const repository = getManager().getRepository(User);
-  const { first_name, last_name, email } = body;
+  const { first_name, last_name, email,role_id } = body;
   const hashed_password = await bcryptjs.hash(body.password, 10);
   const { password, ...user } = await repository.save({
     first_name,
     last_name,
     email,
     password: hashed_password,
+    role: {
+      id: role_id,
+    },
   });
-  res.status(200).send("ລົງທະບຽນສຳເລັດ");
+  res.status(200).send(user);
 };
 // Login Function
 export const Login = async (req: Request, res: Response) => {

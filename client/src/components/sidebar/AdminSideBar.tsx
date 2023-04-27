@@ -1,47 +1,40 @@
 import React, { useState } from "react";
-import { FileOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
+import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
+import { AdminNavdata } from "../../data/data";
 
+const { SubMenu } = Menu;
 const { Sider } = Layout;
-
-type MenuItem = Required<MenuProps>["items"][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
-
-const items: MenuItem[] = [
-  getItem("ຜູ້ໃຊ້ງານ", "sub1", <UserOutlined />, [
-    getItem("ຜູ້ໃຊ້ງານທັງໝົດ", "3"),
-    getItem("ເພີ່ມຜູ້ໃຊ້ງານ", "4"),
-  ]),
-  getItem("ການກຳນົດສິດນຳໃຊ້", "sub2", <TeamOutlined />, [
-    getItem("ສ້າງກົດ", "6"),
-    getItem("Team 2", "8"),
-  ]),
-  getItem("Files", "9", <FileOutlined />),
-];
 
 export default function AdminSideBar() {
   const [collapsed, setCollapsed] = useState(false);
+
   return (
     <Sider
       collapsible
       collapsed={collapsed}
-      onCollapse={(value) => setCollapsed(value)}
+      onCollapse={() => setCollapsed(!collapsed)}
     >
-      <Menu theme="dark" mode="inline" items={items} />
+      <Menu
+        defaultOpenKeys={["1", "2"]}
+        mode="inline"
+        inlineCollapsed={collapsed}
+        className="font-Noto font-semibold"
+        theme="dark"
+      >
+        {AdminNavdata.map((m) => (
+          <SubMenu key={m.id} icon={m.icon} title={m.title}>
+            {m?.Menu_item?.map((mm) => (
+              <Menu.Item key={mm.id}>
+                <Link to={mm.link}>
+                  {mm.icon}
+                  <a className="pl-2">{mm.label}</a>
+                </Link>
+              </Menu.Item>
+            ))}
+          </SubMenu>
+        ))}
+      </Menu>
     </Sider>
   );
 }
