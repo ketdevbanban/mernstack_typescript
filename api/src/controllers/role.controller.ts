@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Role } from "../entity/role.entity";
-import { parse } from "dotenv";
+
 
 export const Roles = async (req: Request, res: Response) => {
   const repository = getManager().getRepository(Role);

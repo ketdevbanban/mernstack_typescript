@@ -18,8 +18,7 @@ export default function AdminSideBar() {
       <Menu
         defaultOpenKeys={["1", "2"]}
         mode="inline"
-        inlineCollapsed={collapsed}
-        className="font-Noto font-semibold"
+        className="font-semibold"
         theme="dark"
       >
         {AdminNavdata.map((m) => (
@@ -28,7 +27,7 @@ export default function AdminSideBar() {
               <Menu.Item key={mm.id}>
                 <Link to={mm.link}>
                   {mm.icon}
-                  <a className="pl-2">{mm.label}</a>
+                  <span className="pl-2">{mm.label}</span>
                 </Link>
               </Menu.Item>
             ))}

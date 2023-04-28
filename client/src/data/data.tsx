@@ -16,13 +16,13 @@ export const AdminNavdata = [
 
     Menu_item: [
       {
-        id: 1,
+        id: 11,
         link: "/users",
         icon: <UserSwitchOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
         label: "ຜູ້ໃຊ້ທັງໝົດ",
       },
       {
-        id: 2,
+        id: 12,
         link: "/register",
         icon: <UserAddOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
         label: "ເພີ່ມຜູ້ໃຊ້ງານ",
@@ -37,19 +37,19 @@ export const AdminNavdata = [
 
     Menu_item: [
       {
-        id: 1,
+        id: 21,
         link: "/admin/roles",
         icon: <UnlockOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
         label: "All Roles",
       },
       {
-        id: 2,
-        link: "/admin/slider",
+        id: 22,
+        link: "/admin/role/create",
         icon: <PlusOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
         label: "Add Role",
       },
       {
-        id: 3,
+        id: 23,
         link: "/admin/slider",
         icon: <LockOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
         label: "Permissions",
