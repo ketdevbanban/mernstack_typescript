@@ -4,7 +4,18 @@ import React, { useEffect, useState } from "react";
 import { User } from "../../models/user";
 import { Link } from "react-router-dom";
 import AdminLayout from "../../components/layout/AdminLayout";
-// import Paginator from "../../components/Paginator";
+import { Space, Table, Tag } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+
+interface DataType {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  role: string[];
+
+}
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -18,6 +29,58 @@ export default function Users() {
       console.log(e);
     }
   };
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "First name",
+      dataIndex: "first_name",
+      key: "first_name",
+    },
+    {
+      title: "Last name",
+      dataIndex: "last_name",
+      key: "last_name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Actions",
+      render: (record) => (
+        <div className="flex">
+          <span
+            onClick={() => del(record.id)}
+            className="cursor-pointer ml-auto"
+          >
+            <DeleteOutlined
+              style={{
+                fontSize: "20px",
+                color: "#b34969",
+              }}
+            />
+          </span>
+          <Link to={`/users/${record.id}/edit`}>
+            <span>
+              <EditOutlined
+                style={{
+                  fontSize: "20px",
+                  color: "#b34969",
+                  marginLeft: "5px",
+                }}
+              />
+            </span>
+          </Link>
+        </div>
+      ),
+    },
+  ];
 
   useEffect(() => {
     loadUserData();
@@ -40,48 +103,7 @@ export default function Users() {
       </div>
 
       <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen">
-        <table className="min-w-full bg-white dark:bg-gray-800 rounded">
-          <thead className="bg-green-200 text-lg ">
-            <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8 bg-indigo-100">
-              <th>#</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users?.map((user: User) => {
-              return (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>
-                    {user.first_name} {user.last_name}
-                  </td>
-                  <td>{user.email}</td>
-                  <td>{user?.role?.name}</td>
-                  <td>
-                    <div className="btn-group mr-2">
-                      <Link
-                        to={`/users/${user.id}/edit`}
-                        className="btn btn-sm btn-outline-secondary"
-                      >
-                        Edit
-                      </Link>
-                      <a
-                        href="#"
-                        className="btn btn-sm btn-outline-secondary"
-                        onClick={() => del(user.id)}
-                      >
-                        Delete
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <Table columns={columns} dataSource={users} />
       </div>
     </AdminLayout>
   );

@@ -8,14 +8,14 @@ interface Permission {
 }
 
 const RoleCreate = () => {
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [selected, setSelected] = useState<number[]>([]);
-  const [name, setName] = useState<string>("");
-  const [redirect, setRedirect] = useState<boolean>(false);
+  const [permissions, setPermissions] = useState([]);
+  const [selected, setSelected] = useState([] as number[]);
+  const [name, setName] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     const getPermissions = async () => {
-      const { data } = await axios.get<Permission[]>("permissions");
+      const { data } = await axios.get("permissions");
       setPermissions(data);
     };
     getPermissions();
@@ -42,7 +42,7 @@ const RoleCreate = () => {
   };
 
   if (redirect) {
-    return <Navigate to="/roles" />;
+    return <Navigate to="/admin/roles" />;
   }
 
   return (

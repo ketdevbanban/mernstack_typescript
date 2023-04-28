@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../components/layout/AdminLayout";
 import axios from "axios";
 import { Link } from "react-router-dom";
-// import { Role } from "../../../models/role";
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
@@ -29,9 +28,9 @@ export default function Roles() {
   return (
     <AdminLayout>
       <Link to="/admin/role/create">
-      <div className=" bg-green-500 rounded-lg p-2 text-center items-center text-white font-bold cursor-pointer hover:bg-green-400 mb-3">
-        Add Role
-      </div>
+        <div className=" bg-green-500 rounded-lg p-2 text-center items-center text-white font-bold cursor-pointer hover:bg-green-400 mb-3">
+          Add Role
+        </div>
       </Link>
 
       <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen ">

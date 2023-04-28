@@ -10,6 +10,8 @@ import Roles from "./pages/admin/role/Roles";
 import RoleCreate from "./pages/admin/role/RoleCreate";
 import UserSideBar from "./components/sidebar/UserSideBar";
 import RoleEdit from "./pages/admin/role/RoleEdit";
+import TableTest from "./pages/admin/role/Table";
+import UserEdit from "./pages/users/UserEdit";
 
 function App() {
   return (
@@ -19,11 +21,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Hone />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/users/:id/edit" element={<UserEdit />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin/roles" element={<Roles />} />
         <Route path="/admin/role/create" element={<RoleCreate />} />
         <Route path="/roles/:id/edit" element={<RoleEdit />} />
+        <Route path="/tabletest" element={<TableTest />} />
       </Routes>
     </BrowserRouter>
   );
