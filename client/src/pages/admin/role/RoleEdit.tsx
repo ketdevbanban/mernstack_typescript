@@ -53,10 +53,10 @@ const RoleEdit = (props: any) => {
 
   return (
     <AdminLayout>
-      <div className="w-full flex justify-center h-screen p-5 drop-shadow-2xl bg-gray-200  ">
+      <div className="mx-auto p-5  h-screen">
         <form
           onSubmit={submit}
-          className="pt-20 p-3 bg-white w-full rounded-t-xl"
+          className="pt-5 p-3 bg-white w-full rounded-t-xl"
         >
           <div className="flex justify-center text-center items-center p-3 font-bold text-xl text-green-500">
             Edit Role
@@ -68,7 +68,7 @@ const RoleEdit = (props: any) => {
             </label>
             <div className="col-sm-10">
               <input
-                className="w-full outline-none bg-slate-300 p-2 rounded-r-xl text-lg"
+                className="form-control"
                 id="name-input"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
@@ -77,8 +77,10 @@ const RoleEdit = (props: any) => {
             </div>
           </div>
 
-          <div className="text-center mb-5 font-bold text-xl">ການກຳນົດສິດ</div>
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 xl:grid-cols-6 text-start  bg-green-500 p-5">
+          <div className="text-center mb-5 font-bold text-xl my-3">
+            ການກຳນົດສິດ
+          </div>
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 xl:grid-cols-6 text-start   border-2 border-dotted border-blue-400 rounded-xl p-5">
             {permissions.map((p: Permission) => {
               return (
                 <div className="flex justify-start gap-2" key={p.id}>

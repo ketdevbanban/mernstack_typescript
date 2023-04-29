@@ -14,7 +14,6 @@ interface DataType {
   last_name: string;
   email: string;
   role: string[];
-
 }
 
 export default function Users() {
@@ -50,6 +49,12 @@ export default function Users() {
       title: "Email",
       dataIndex: "email",
       key: "email",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "email",
+      render: (record) => record?.name,
     },
     {
       title: "Actions",
@@ -96,14 +101,18 @@ export default function Users() {
 
   return (
     <AdminLayout>
-      <div className="p-2 bg-green-500 w-[70px] text-center items-center rounded-full text-white">
-        <Link to="/users/create" className="text-lg">
-          Add
-        </Link>
-      </div>
+      <div className="">
+      <div className="flex justify-end">
+          <Link to="/register" className="text-lg">
+            <button className="p-1 bg-green-500 rounded-lg text-white items-center mb-2 mr-5">
+            + Add
+            </button>
+          </Link>
+          </div>
 
-      <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen">
-        <Table columns={columns} dataSource={users} />
+        <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen">
+          <Table columns={columns} dataSource={users} />
+        </div>
       </div>
     </AdminLayout>
   );

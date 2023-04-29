@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../components/layout/AdminLayout";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
@@ -19,10 +20,19 @@ export default function Roles() {
     })();
   }, []);
   const del = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
-      await axios.delete(`roles/${id}`);
+    try {
+      if (window.confirm("Are you sure you want to delete this record?")) {
+        await axios.delete(`roles/${id}`);
 
-      setRoles(roles.filter((r: Role) => r.id !== id));
+        setRoles(roles.filter((r: Role) => r.id !== id));
+        toast.success("ການລຶບສິດສຳເລັດ", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    } catch (error) {
+      toast.warn("ບໍ່ສາມາດລຶບໄດ້ເນຶ່ອງຈາກວ່າ ຍັງມີຜູ້ໃຊ້ກົດນີ້ຢູ່", {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
   return (

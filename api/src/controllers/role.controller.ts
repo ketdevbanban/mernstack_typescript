@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { getManager } from "typeorm";
 import { Role } from "../entity/role.entity";
 
-
 export const Roles = async (req: Request, res: Response) => {
   const repository = getManager().getRepository(Role);
   res.send(await repository.find());
@@ -42,7 +41,11 @@ export const UpdateRole = async (req: Request, res: Response) => {
 };
 
 export const DeleteRole = async (req: Request, res: Response) => {
-  const repository = getManager().getRepository(Role);
-  await repository.delete(req.params.id);
-  res.status(204).send(null);
+  try {
+    const repository = getManager().getRepository(Role);
+    await repository.delete(req.params.id);
+    res.status(204).send(null);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
 };

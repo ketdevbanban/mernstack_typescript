@@ -17,7 +17,7 @@ export const Register = async (req: Request, res: Response) => {
     });
   }
   const repository = getManager().getRepository(User);
-  const { first_name, last_name, email,role_id } = body;
+  const { first_name, last_name, email, role_id } = body;
   const hashed_password = await bcryptjs.hash(body.password, 10);
   const { password, ...user } = await repository.save({
     first_name,
