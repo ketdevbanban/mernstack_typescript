@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminLayout from "../../../components/layout/AdminLayout";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import type { ColumnsType } from "antd/es/table";
+import { Table } from "antd";
+import {
+  PlusCircleOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
@@ -11,12 +18,19 @@ export default function Roles() {
     id: number;
     name: string;
   }
-
+  interface DataType {
+    id: number;
+    name: string;
+  }
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get("roles");
-
-      setRoles(data);
+      try {
+        const { data } = await axios.get("roles");
+        setRoles(data);
+        console.log(data);
+      } catch (e) {
+        console.log(e);
+      }
     })();
   }, []);
   const del = async (id: number) => {
@@ -35,51 +49,61 @@ export default function Roles() {
       });
     }
   };
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Role Name",
+      dataIndex: "name",
+      key: "name",
+    },
+
+    {
+      title: "Actions",
+      render: (record) => (
+        <div className="flex ">
+          <span onClick={() => del(record.id)} className="cursor-pointer">
+            <DeleteOutlined
+              style={{
+                fontSize: "20px",
+                color: "#b34969",
+              }}
+            />
+          </span>
+          <Link to={`/roles/${record.id}/edit`}>
+            <span>
+              <EditOutlined
+                style={{
+                  fontSize: "20px",
+                  color: "#b34969",
+                  marginLeft: "5px",
+                }}
+              />
+            </span>
+          </Link>
+        </div>
+      ),
+    },
+  ];
   return (
     <AdminLayout>
-      <Link to="/admin/role/create">
-        <div className=" bg-green-500 rounded-lg p-2 text-center items-center text-white font-bold cursor-pointer hover:bg-green-400 mb-3">
-          Add Role
+      <div className="">
+        <div className="flex justify-end">
+          <Link to="/admin/role/create" className="text-lg">
+            <PlusCircleOutlined
+              style={{ fontSize: 30, marginRight: 7, color: "green" }}
+            />
+            Add
+          </Link>
         </div>
-      </Link>
 
-      <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen ">
-        <table className="min-w-full bg-white  rounded">
-          <thead className="bg-green-200 text-lg">
-            <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8 bg-indigo-100 ">
-              <th>ID</th>
-              <th>Name</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {roles.map((role: Role) => {
-              return (
-                <tr key={role.id} className="w-full h-16 text-center">
-                  <td>{role.id}</td>
-                  <td>{role.name}</td>
-                  <td>
-                    <div className="flex justify-center gap-x-3">
-                      <Link
-                        to={`/roles/${role.id}/edit`}
-                        className="p-2 rounded-lg bg-green-500"
-                      >
-                        Edit
-                      </Link>
-                      <a
-                        href="#"
-                        className="p-2 rounded-lg bg-orange-500"
-                        onClick={() => del(role.id)}
-                      >
-                        Delete
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen pt-3">
+          <Table columns={columns} dataSource={roles} />
+        </div>
       </div>
     </AdminLayout>
   );

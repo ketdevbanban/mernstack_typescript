@@ -12,6 +12,7 @@ import UserSideBar from "./components/sidebar/UserSideBar";
 import RoleEdit from "./pages/admin/role/RoleEdit";
 import TableTest from "./pages/admin/role/Table";
 import UserEdit from "./pages/users/UserEdit";
+import RegistrationForm from "./pages/register1";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/admin/role/create" element={<RoleCreate />} />
         <Route path="/roles/:id/edit" element={<RoleEdit />} />
         <Route path="/tabletest" element={<TableTest />} />
+        <Route path="/register1" element={<RegistrationForm />} />
       </Routes>
     </BrowserRouter>
   );

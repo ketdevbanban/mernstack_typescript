@@ -16,19 +16,26 @@ export const Register = async (req: Request, res: Response) => {
       message: "Password's do not match",
     });
   }
-  const repository = getManager().getRepository(User);
-  const { first_name, last_name, email, role_id } = body;
-  const hashed_password = await bcryptjs.hash(body.password, 10);
-  const { password, ...user } = await repository.save({
-    first_name,
-    last_name,
-    email,
-    password: hashed_password,
-    role: {
-      id: role_id,
-    },
-  });
-  res.status(200).send(user);
+  try {
+    const repository = getManager().getRepository(User);
+
+    const { first_name, last_name, email, role_id } = body;
+    const hashed_password = await bcryptjs.hash(body.password, 10);
+    const { password, ...user } = await repository.save({
+      first_name,
+      last_name,
+      email,
+      password: hashed_password,
+      role: {
+        id: role_id,
+      },
+    });
+    res.status(200).send(user);
+  } catch (error) {
+    return res.status(400).send({
+      message: "invalid credentials!",
+    });
+  }
 };
 // Login Function
 export const Login = async (req: Request, res: Response) => {

@@ -1,12 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-// import Wrapper from "../../components/Wrapper";
+import { useEffect, useState } from "react";
 import { User } from "../../models/user";
 import { Link } from "react-router-dom";
 import AdminLayout from "../../components/layout/AdminLayout";
-import { Space, Table, Tag } from "antd";
+import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
+import { toast } from "react-toastify";
 
 interface DataType {
   id: number;
@@ -19,13 +23,34 @@ interface DataType {
 export default function Users() {
   const [users, setUsers] = useState([]);
 
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
   const loadUserData = async () => {
     try {
       const { data } = await axios.get("users");
       setUsers(data);
-      console.log(data);
+      // console.log(data);
     } catch (e) {
       console.log(e);
+    }
+  };
+  const del = async (id: number) => {
+    try {
+      if (window.confirm("Are you sure you want to delete this record?")) {
+        await axios.delete(`users/${id}`);
+
+        loadUserData();
+        toast.success("ການລຶບສຳເລັດ", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        setUsers(users?.filter((u: User) => u.id !== id));
+      }
+    } catch (error) {
+      toast.error("ການລຶບບໍ່ສຳເລັດ", {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 
@@ -59,11 +84,8 @@ export default function Users() {
     {
       title: "Actions",
       render: (record) => (
-        <div className="flex">
-          <span
-            onClick={() => del(record.id)}
-            className="cursor-pointer ml-auto"
-          >
+        <div>
+          <span onClick={() => del(record.id)} className="cursor-pointer">
             <DeleteOutlined
               style={{
                 fontSize: "20px",
@@ -87,30 +109,19 @@ export default function Users() {
     },
   ];
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
-
-  const del = async (id: number) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
-      await axios.delete(`users/${id}`);
-      loadUserData();
-      setUsers(users?.filter((u: User) => u.id !== id));
-    }
-  };
-
   return (
     <AdminLayout>
-      <div className="">
-      <div className="flex justify-end">
+      <div>
+        <div className="flex justify-end">
           <Link to="/register" className="text-lg">
-            <button className="p-1 bg-green-500 rounded-lg text-white items-center mb-2 mr-5">
-            + Add
-            </button>
+            <PlusCircleOutlined
+              style={{ fontSize: 30, marginRight: 7, color: "green" }}
+            />
+            Add
           </Link>
-          </div>
+        </div>
 
-        <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen">
+        <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen pt-3">
           <Table columns={columns} dataSource={users} />
         </div>
       </div>
