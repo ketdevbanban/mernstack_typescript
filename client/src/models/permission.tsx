@@ -1,3 +1,3 @@
 export class Permission {
-  constructor(public id = 0, public name = "") {}
+  constructor(public readonly id: number = 0, public name: string = "") {}
 }

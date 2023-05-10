@@ -5,43 +5,52 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { ColumnsType } from "antd/es/table";
 import { Table } from "antd";
+import Swal from "sweetalert2";
 import {
   PlusCircleOutlined,
   EditOutlined,
   DeleteOutlined,
+  CheckOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
+import { Role } from "../../../models/role";
 
 export default function Roles() {
   const [roles, setRoles] = useState([]);
 
-  interface Role {
-    id: number;
-    name: string;
-  }
-  interface DataType {
-    id: number;
-    name: string;
-  }
   useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get("roles");
-        setRoles(data);
-        console.log(data);
-      } catch (e) {
-        console.log(e);
-      }
-    })();
+    try {
+      (async () => {
+        try {
+          const { data } = await axios.get("roles");
+          setRoles(data);
+          console.log(data);
+        } catch (e) {
+          console.log(e);
+        }
+      })();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
+
   const del = async (id: number) => {
     try {
-      if (window.confirm("Are you sure you want to delete this record?")) {
+      const result = await Swal.fire({
+        title: "ເຈົ້າຕ້ອງການລຶບແທ້ບໍ່",
+        text: "ຖ້າເຈົ້າລຶບ ຈະບໍ່ສາມາດກູ້ຄືນມາໄດ້",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "ຕ້ອງການລຶບ",
+      });
+
+      if (result.isConfirmed) {
+        Swal.fire("ລຶບສຳເລັດ", "ຖ້າທ່ານລຶມຈະບໍ່ສາມາດກູຄືນໄດ້", "success");
         await axios.delete(`roles/${id}`);
 
         setRoles(roles.filter((r: Role) => r.id !== id));
-        toast.success("ການລຶບສິດສຳເລັດ", {
-          position: toast.POSITION.TOP_CENTER,
-        });
       }
     } catch (error) {
       toast.warn("ບໍ່ສາມາດລຶບໄດ້ເນຶ່ອງຈາກວ່າ ຍັງມີຜູ້ໃຊ້ກົດນີ້ຢູ່", {
@@ -50,16 +59,30 @@ export default function Roles() {
     }
   };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<Role> = [
     {
       title: "Id",
       dataIndex: "id",
       key: "id",
     },
     {
+      title: "Id",
+      render: (record) =>
+        record.name == "Admin" ? (
+          <span>
+            <CheckOutlined style={{ fontSize: "30px", color: "#13ed87" }} />
+          </span>
+        ) : (
+          <span>
+            <CloseOutlined style={{ fontSize: "30px", color: "#c91038" }} />
+          </span>
+        ),
+    },
+    {
       title: "Role Name",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
 
     {
@@ -102,7 +125,21 @@ export default function Roles() {
         </div>
 
         <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen pt-3">
-          <Table columns={columns} dataSource={roles} />
+          <Table
+            columns={columns}
+            dataSource={roles}
+            bordered
+            size="middle"
+            scroll={{ y: 500 }}
+            style={{
+              border: "1px solid #f0f0f0",
+              borderRadius: "30px",
+              textAlign: "center",
+              marginTop: "20px",
+              marginBottom: "20px",
+              width: "100%",
+            }}
+          />
         </div>
       </div>
     </AdminLayout>

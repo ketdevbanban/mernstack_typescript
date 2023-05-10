@@ -28,6 +28,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: false })
+  status: boolean;
+
   @CreateDateColumn({
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP(6)",
@@ -41,7 +44,7 @@ export class User {
   })
   public updated_at: Date;
 
-  @ManyToOne(() => Role)
+  @ManyToOne(() => Role, { eager: true })
   @JoinColumn({ name: "role_id" })
   role: Role;
 }

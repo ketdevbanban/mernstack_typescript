@@ -2,7 +2,7 @@ import React from "react";
 
 interface InputProps {
   id: string;
-  label: string;
+  label?: string;
   type: string;
   value: string;
   placeholder?: string;
@@ -11,14 +11,14 @@ interface InputProps {
 
 const Input = (props: InputProps) => {
   return (
-    <div >
-      <label htmlFor={props.id}>{props.label}</label>
+    <div className="">
       <input
         className="form-control"
         type={props.type}
         id={props.id}
         value={props.value}
         onChange={props.onChange}
+        placeholder={props.placeholder}
       />
     </div>
   );

@@ -42,3 +42,7 @@
   m-0
   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none;
 }
+
+.btn-btn-primary {
+  @apply bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full;
+}

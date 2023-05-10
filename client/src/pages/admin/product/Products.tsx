@@ -1,66 +1,61 @@
+//import Libray
+import React, { useEffect, useRef, useState } from "react";
+import AdminLayout from "../../../components/layout/AdminLayout";
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
-import type { FilterConfirmProps } from "antd/es/table/interface";
-import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
-import AdminLayout from "../../components/layout/AdminLayout";
-import { Button, Input, Space, Switch, Table } from "antd";
+import Highlighter from "react-highlight-words";
+import { toast } from "react-toastify";
 import type { ColumnsType, ColumnType } from "antd/es/table";
+import {
+  SearchOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+
+import type { FilterConfirmProps } from "antd/es/table/interface";
+import { Button, Input, Space, Table } from "antd";
 import type { InputRef } from "antd";
 
-import Swal from "sweetalert2";
+//interface
+interface Product {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+}
+//
 
-import {
-  DeleteOutlined,
-  EditOutlined,
-  PlusCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { toast } from "react-toastify";
-import { User } from "../../models/user";
-
-export default function Users() {
-  //State
-  const [users, setUsers] = useState<User[]>([]);
+export default function Products() {
+  const [products, setProducts] = useState<Product[]>([]);
   const searchInput = useRef<InputRef>(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
 
-  //Effect
   useEffect(() => {
-    loadUserData();
-  }, []);
-  //Load Data
-  const loadUserData = async () => {
     try {
-      const { data } = await axios.get("users");
-      setUsers(data);
-      // console.log(data);
+      (async () => {
+        const { data } = await axios.get("products");
+        setProducts(data);
+        console.log(data);
+      })();
     } catch (e) {
       console.log(e);
     }
-  };
-  // Delet Function
+  }, []);
+
   const del = async (id: number) => {
     try {
-      const result = await Swal.fire({
-        title: "ເຈົ້າຕ້ອງການລຶບແທ້ບໍ່",
-        text: "ຖ້າເຈົ້າລຶບ ຈະບໍ່ສາມາດກູ້ຄືນມາໄດ້",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes, delete it!",
-      });
+      if (window.confirm("Are you sure you want to delete this record?")) {
+        await axios.delete(`products/${id}`);
 
-      if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
-        await axios.delete(`users/${id}`);
-
-        setUsers(users?.filter((u: User) => u.id !== id));
+        setProducts(products.filter((p: Product) => p.id !== id));
+        toast.success("ການລຶບສິດສຳເລັດ", {
+          position: toast.POSITION.TOP_CENTER,
+        });
       }
     } catch (error) {
-      toast.error("ການລຶບບໍ່ສຳເລັດ", {
+      toast.warn("ບໍ່ສາມາດລຶບໄດ້ເນຶ່ອງຈາກວ່າ ຍັງມີຜູ້ໃຊ້ກົດນີ້ຢູ່", {
         position: toast.POSITION.TOP_CENTER,
       });
     }
@@ -70,7 +65,7 @@ export default function Users() {
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: keyof User
+    dataIndex: keyof Product
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -82,7 +77,9 @@ export default function Users() {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex: keyof User): ColumnType<User> => ({
+  const getColumnSearchProps = (
+    dataIndex: keyof Product
+  ): ColumnType<Product> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -171,62 +168,40 @@ export default function Users() {
       ),
   });
 
-  const onChangeStatus = async (id: number, status: boolean) => {
-    try {
-      await axios.put(`users/${id}/status`, { status });
-      loadUserData();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const columns: ColumnsType<User> = [
+  const columns: ColumnsType<Product> = [
     {
       title: "Id",
       dataIndex: "id",
       key: "id",
     },
     {
-      title: "First name",
-      dataIndex: "first_name",
-      key: "first_name",
+      title: "Product Name",
+      dataIndex: "title",
+      key: "title",
+      ...getColumnSearchProps("title"),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      ...getColumnSearchProps("description"),
+    },
+    {
+      title: "Images",
+      dataIndex: "image",
+      key: "image",
+    },
+    {
+      title: "Prices",
+      dataIndex: "price",
+      key: "price",
+      ...getColumnSearchProps("price"),
+    },
 
-      ...getColumnSearchProps("first_name"),
-    },
-    {
-      title: "Last name",
-      dataIndex: "last_name",
-      key: "last_name",
-      ...getColumnSearchProps("last_name"),
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Role",
-      dataIndex: "role",
-      key: "email",
-      render: (record) => record?.name,
-    },
-    {
-      title: "status",
-      dataIndex: "status",
-      key: "status",
-
-      render: (status,record) => (
-        <Switch
-          checked={status}
-          onChange={() => onChangeStatus(record.id, !status)}
-          className="bg-gray-500"
-        />
-      ),
-    },
     {
       title: "Actions",
       render: (record) => (
-        <div>
+        <div className="flex ">
           <span onClick={() => del(record.id)} className="cursor-pointer">
             <DeleteOutlined
               style={{
@@ -235,13 +210,13 @@ export default function Users() {
               }}
             />
           </span>
-          <Link to={`/users/${record.id}/edit`}>
-            <span className="mr-20">
+          <Link to={`/admin/product/${record.id}/edit`}>
+            <span>
               <EditOutlined
                 style={{
                   fontSize: "20px",
                   color: "#b34969",
-                  marginRight: "10px",
+                  marginLeft: "5px",
                 }}
               />
             </span>
@@ -253,18 +228,9 @@ export default function Users() {
 
   return (
     <AdminLayout>
-      <div>
-        <div className="flex justify-end">
-          <Link to="/register" className="text-lg">
-            <PlusCircleOutlined
-              style={{ fontSize: 30, marginRight: 7, color: "green" }}
-            />
-            Add
-          </Link>
-        </div>
-
+      <div className="h-screen">
         <div className="w-full overflow-x-scroll xl:overflow-x-hidden h-screen pt-3">
-          <Table columns={columns} dataSource={users} />
+          <Table columns={columns} dataSource={products} />
         </div>
       </div>
     </AdminLayout>

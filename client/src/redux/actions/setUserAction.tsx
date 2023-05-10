@@ -1,8 +1,8 @@
-import {User} from "../../models/user";
+import { User } from "../../models/user";
 
 export const setUser = (user: User) => {
-    return {
-        type: 'SET_USER',
-        user
-    }
-}
+  return {
+    type: "SET_USER",
+    user,
+  };
+};

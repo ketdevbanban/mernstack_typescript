@@ -1,7 +1,7 @@
 export class Role {
     constructor(
-        public id = 0,
-        public name = ''
+        public readonly id: number = 0,
+        public name :string = ''
     ) {
     }
 }

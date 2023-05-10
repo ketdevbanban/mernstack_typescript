@@ -1,16 +1,17 @@
-import {Role} from "./role";
+import { Role } from "./role";
 
 export class User {
-    constructor(
-        public id = 0,
-        public first_name = '',
-        public last_name = '',
-        public email = '',
-        public role = new Role()
-    ) {
-    }
+  constructor(
+    public readonly id: number = 0,
+    public first_name: string = "",
+    public last_name: string = "",
+    public email: string = "",
+    public status: boolean = false, //
+    
+    public role: Role = new Role()
+  ) {}
 
-    get name() {
-        return this.first_name + ' ' + this.last_name;
-    }
+  get name() {
+    return this.first_name + " " + this.last_name;
+  }
 }

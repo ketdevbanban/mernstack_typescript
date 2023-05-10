@@ -48,11 +48,26 @@ export const AdminNavdata = [
         icon: <PlusOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
         label: "Add Role",
       },
+    ],
+  },
+  {
+    id: 3,
+
+    icon: <UnlockOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
+    title: "Products",
+
+    Menu_item: [
       {
-        id: 23,
-        link: "/admin/slider",
-        icon: <LockOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
-        label: "Permissions",
+        id: 31,
+        link: "/admin/products",
+        icon: <UnlockOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
+        label: "All Products",
+      },
+      {
+        id: 32,
+        link: "/admin/products/create",
+        icon: <PlusOutlined style={{ fontSize: 20, color: "#e310ab" }} />,
+        label: "Add Product",
       },
     ],
   },

@@ -1,82 +1,73 @@
-import axios from "axios";
-import React, { SyntheticEvent, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Checkbox } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../../components/layout/AdminLayout";
+import axios from "axios";
+import Swal from "sweetalert2";
 interface Permission {
   id: number;
   name: string;
 }
-const RoleEdit = (props: any) => {
-  const [permissions, setPermissions] = useState([]);
-  const [selected, setSelected] = useState([] as number[]);
-  const [name, setName] = useState("");
-  const [redirect, setRedirect] = useState(false);
-  // Get the ID parameter from the URL
-  const { id } = useParams();
-  console.log("Role_ID=>", id);
+
+const RoleEdit = () => {
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
+  const { id } = useParams<{ id: string }>();
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    (async () => {
-      const response = await axios.get("permissions");
+    try {
+      (async () => {
+        const response = await axios.get("permissions");
+        setPermissions(response.data);
 
-      setPermissions(response.data);
+        const { data } = await axios.get(`roles/${id}`);
 
-      const { data } = await axios.get(`roles/${id}`);
-
-      setName(data.name);
-      setSelected(data.permissions.map((p: Permission) => p.id));
-    })();
-  }, []);
+        form.setFieldsValue({ name: data.name });
+        setSelected(data.permissions.map((p: Permission) => p.id));
+      })();
+    } catch (e) {
+      console.log(e);
+    }
+  }, [form, id]);
 
   const check = (id: number) => {
     if (selected.some((s) => s === id)) {
       setSelected(selected.filter((s) => s !== id));
       return;
     }
-
     setSelected([...selected, id]);
   };
 
-  const submit = async (e: SyntheticEvent) => {
-    e.preventDefault();
+  const onFinish = async (values: any) => {
+    try {
+      await axios.put(`roles/${id}`, {
+        name: values.name,
+        permissions: selected,
+      });
+      Swal.fire("ແກ້ໄຂສຳເລັດ", "ທ່ານໄດ້ແກ້ໄຂ Role ສຳເລັດແລ້ວ", "success");
 
-    await axios.put(`roles/${id}`, {
-      name,
-      permissions: selected,
-    });
-
-    setRedirect(true);
+      navigate("/admin/roles");
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  if (redirect) {
-    return <Navigate to="/admin/roles" />;
-  }
 
   return (
     <AdminLayout>
-      <div className="mx-auto p-5  h-screen">
-        <form
-          onSubmit={submit}
+      <div className="h-screen">
+        <Form
+          form={form}
+          onFinish={onFinish}
           className="pt-5 p-3 bg-white w-full rounded-t-xl"
         >
           <div className="flex justify-center text-center items-center p-3 font-bold text-xl text-green-500">
             Edit Role
           </div>
-
-          <div className="w-full">
-            <label className="w-full" htmlFor="name-input">
-              Role Name
-            </label>
-            <div className="col-sm-10">
-              <input
-                className="form-control"
-                id="name-input"
-                defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter role name"
-              />
-            </div>
-          </div>
-
+          <Form.Item name="name" label="Role Name">
+            <Input placeholder="Enter role name" />
+          </Form.Item>
           <div className="text-center mb-5 font-bold text-xl my-3">
             ການກຳນົດສິດ
           </div>
@@ -84,26 +75,34 @@ const RoleEdit = (props: any) => {
             {permissions.map((p: Permission) => {
               return (
                 <div className="flex justify-start gap-2" key={p.id}>
-                  <input
-                    className="bg-green-500"
-                    type="checkbox"
+                  <Checkbox
                     value={p.id}
                     checked={selected.some((s) => s === p.id)}
                     onChange={() => check(p.id)}
-                    title="Checkbox"
                   />
                   <label htmlFor="form-check-label">{p.name}</label>
                 </div>
               );
             })}
           </div>
-
-          <div className="pt-3">
-            <button className="w-full bg-green-300 rounded-full p-3 hover:bg-pink-500 hover:rounded-full">
+          <div className="pt-3 text-center flex justify-center items-center">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="px-4 py-2 rounded-full transition duration-500 ease-in-out focus:outline-none opacity-75 hover:opacity-100  bg-white border border-gray-400 text-black shadow-lg w-[200px] itmem-center"
+              style={{
+                textAlign: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
               Save
-            </button>
+            </Button>
           </div>
-        </form>
+        </Form>
       </div>
     </AdminLayout>
   );

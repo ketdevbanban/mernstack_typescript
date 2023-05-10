@@ -17,7 +17,12 @@ export const AuthMiddleware = async (
       });
     }
     const repository = getManager().getRepository(User);
-    req["user"] = await repository.findOne({ where: { id: payload.id } });
+
+    req["user"] = await repository.findOne({
+      where: { id: payload.id },
+      relations: ["role", "role.permissions"],
+    });
+    console.log("AuthMiddleware=>", req["user"]);
     next();
   } catch (error) {
     return res.status(401).send({

@@ -13,7 +13,7 @@ interface FormData {
   role_id: number;
 }
 
-const RegistrationForm = () => {
+export default function RegistrationForm() {
   const [redirect, setRedirect] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     first_name: "",
@@ -120,4 +120,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+

@@ -7,14 +7,22 @@ export const Roles = async (req: Request, res: Response) => {
   res.send(await repository.find());
 };
 
+
 export const CreateRole = async (req: Request, res: Response) => {
   const { name, permissions } = req.body;
-  const repository = getManager().getRepository(Role);
-  const role = await repository.save({
-    name,
-    permissions: permissions.map((id) => ({ id })),
-  });
-  res.status(201).send(role);
+  try {
+    const repository = getManager().getRepository(Role);
+
+    const role = await repository.save({
+      name,
+      permissions: permissions.map((id) => ({ id })),
+    });
+    res.status(201).send(role);
+  } catch (error) {
+    res.send({
+      message: "Name already exists",
+    });
+  }
 };
 
 export const GetRole = async (req: Request, res: Response) => {

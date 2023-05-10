@@ -28,15 +28,20 @@ export const GetPermission = async (req: Request, res: Response) => {
 
 export const UpdatePermission = async (req: Request, res: Response) => {
   const { name } = req.body;
-  const repository = getManager().getRepository(Permission);
-  await repository.update(req.params.id, { name });
-  const permission = await repository.findOne({
-    where: { id: parseInt(req.params.id) },
-  });
-  res.status(202).send({
-    message: "Update Permission Success",
-    data: permission,
-  });
+  try {
+    const repository = getManager().getRepository(Permission);
+    await repository.update(req.params.id, { name });
+    const permission = await repository.findOne({
+      where: { id: parseInt(req.params.id) },
+    });
+    res.status(202).send({
+      message: "Update Permission Success",
+      data: permission,
+    });
+  } catch (e) {
+    res.status(500).send({ error: e.message})
+  }
+
 };
 
 export const DeletePermission = async (req: Request, res: Response) => {

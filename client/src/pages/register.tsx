@@ -3,6 +3,7 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import AdminLayout from "../components/layout/AdminLayout";
 
 export default function Register(): JSX.Element {
   const [firstName, setFirstName] = useState("");
@@ -43,7 +44,7 @@ export default function Register(): JSX.Element {
   }
 
   return (
-    <>
+    <AdminLayout>
       <div className="mx-auto p-5  h-screen">
         <Link to="/">
           <div className="flex justify-end mb-2">
@@ -116,6 +117,6 @@ export default function Register(): JSX.Element {
           </form>
         </div>
       </div>
-    </>
+    </AdminLayout>
   );
 }
